@@ -37,17 +37,31 @@ def parse_meta_file():
     all_meta_file_paths=glob.glob(os.path.join(root_meta_file_path,"*","metafile.yml"),recursive=True)
     weights_list = []
 
+    # j = 0
     for meta_file_path in all_meta_file_paths:
         with open(meta_file_path,'r') as f:
             yaml_file = yaml.safe_load(f)
-
-            for i in range(len(yaml_file['Models'])):
+            yaml_file_models = None
+            # Sometimes the yaml file loads as dictionary and sometimes a list
+            if isinstance(yaml_file,dict):
+                yaml_file_models = yaml_file["Models"]
+            else:
+                yaml_file_models = yaml_file
+            for i in range(len(yaml_file_models)):
                 try:
-                    weights_list.append(yaml_file['Models'][i]['Weights'])
+                    # print(f"yaml_file {j}: {yaml_file_models[i]['Weights']}\n")
+                    weights_list.append(yaml_file_models[i]['Weights'])
                 except:
-                    for k,v in yaml_file['Models'][i]['Results'][0]['Metrics'].items():
-                        if k== 'Weights':
-                            weights_list.append(yaml_file['Models'][i]['Results'][0]['Metrics']['Weights'])
+                    metrics = yaml_file_models[i]['Results'][0].get('Metrics',None)
+                    if(metrics):
+                        weights = yaml_file_models[i]['Results'][0]['Metrics'].get('Weights',None)
+                        if(weights):
+                            weights_list.append(weights)
+                    else:
+                        # weights_list.append(f"no url found for model:{yaml_file_models[i]['Name']}")
+                        weights_list.append(f"no url found for model: {yaml_file_models[i].get('Name', 'Unknown')}")
+
+            # j=j+1   
     
 
     return weights_list
@@ -113,4 +127,5 @@ def write_weights_txt_file():
 if __name__ == '__main__':
     write_weights_txt_file()
     weights_list = parse_meta_file()
-    print(weights_list[:3])
+    for i in range(0,3):
+        print(weights_list[i])
