@@ -92,3 +92,25 @@ def get_model(weights_name):
     model = init_detector(config_file,checkpoint_file)
 
     return model
+
+def write_weights_txt_file():
+    """
+    Write all the model URLs to 'weights.txt' to have complete list and choose one of them.add()
+
+    EXECUTE 'utils.py' if 'weights.txt' not already present.
+    'python utils.py' command will generate the latest 'weights.txt'
+    file according to the cloned mmdetection repository.
+    """
+
+    # Get the list containing all the weight file download URLs
+    weight_list = parse_meta_file()
+    with open('weights.txt','w') as f:
+        for weights in weight_list:
+            f.writelines(f"{weights}\n")
+        f.close()
+
+
+if __name__ == '__main__':
+    write_weights_txt_file()
+    weights_list = parse_meta_file()
+    print(weights_list[:3])
