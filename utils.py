@@ -3,6 +3,8 @@ import requests
 import glob
 import yaml
 
+from mmdet.apis import init_detector
+
 def download_weights(url,file_save_name):
     """
     Download weights for any model.
@@ -49,3 +51,44 @@ def parse_meta_file():
     
 
     return weights_list
+
+
+def get_model(weights_name):
+    """
+    Either downloads a model or loads one from local path if already
+    downloaded using the weight file name ('weights_name') provided.
+
+    :param weights_name: Name of the weight file. Most like in the format:
+    **'retinanet_ghm_r50_fpn_1x_coco'**. See **'weights.txt'** to know weight file name formats and downloadable URL formats.
+
+    Returns:
+        model: The loaded detection model.
+    """
+    # Get the list containing all the weight file download URLs.
+    weights_list = parse_meta_file()
+
+    download_url = None
+    for weights in weights_list:
+        if weights_name in weights:
+            print(f'Found weights: {weights}\n')
+            download_url = weights
+            break
+        
+
+    assert download_url != None, f"{weights_name} weight file not found!!!"
+    
+    # Download the checkpoint file.(will only donwload if the checkpoint file is not present locally)
+    download_weights(url=download_url,file_save_name=download_url.split('/')[-1])
+
+    checkpoint_file = os.path.join('checkpoint',download_url.split('/')[-1])
+
+    # Build the model using the configuration file.
+    config_file = os.path.join(
+        'mmdetection/configs',
+        download_url.split('/')[-3],
+        download_url.split('/')[-2],
+        '.py')
+    
+    model = init_detector(config_file,checkpoint_file)
+
+    return model
