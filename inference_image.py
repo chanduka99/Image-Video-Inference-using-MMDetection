@@ -23,7 +23,7 @@ parser.add_argument(
     help='detection threshold for bounding box visualization'
 )
 
-args = vars(parser.parse_args) # will take the input from the commandline and construct a dictionary out of it.
+args = vars(parser.parse_args()) # will take the input from the commandline and construct a dictionary out of it.
 
 
 # Build the model.

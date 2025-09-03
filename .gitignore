@@ -1,3 +1,7 @@
 mmcv
 */.env
 mmdetection
+
+# Ignore all model weights
+*.pth
+checkpoint/

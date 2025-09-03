@@ -2,6 +2,7 @@ import os
 import requests
 import glob
 import yaml
+from tqdm import tqdm
 
 from mmdet.apis import init_detector
 
@@ -15,14 +16,33 @@ def download_weights(url,file_save_name):
     # Make checkpoint directory if not present
     if not os.path.exists('checkpoint'):
         os.makedirs('checkpoint')
+    
+    file_path = os.path.join('checkpoint', file_save_name)
 
     # Download the file if not present
-    if not os.path.exists(os.path.join('checkpoint',file_save_name)):
-        file =  requests.get(url)
-        open(
-            os.path.join('checkpoint',file_save_name),'wb'
-        ).write(file.content)
+    if not os.path.exists(file_path):
+        with requests.get(url, stream=True) as response:
+            response.raise_for_status()
+            total_size = int(response.headers.get('content-length', 0))
+            block_size = 1024  # 1 KB
+            progress_bar = tqdm(
+                total=total_size,
+                unit='iB',
+                unit_scale=True,
+                desc=f"Downloading {file_save_name}",
+                ascii=True,  # looks like pip’s progress bar
+                colour="green"
+            )
 
+            with open(file_path, 'wb') as f:
+                for data in response.iter_content(block_size):
+                    f.write(data)
+                    progress_bar.update(len(data))
+
+            progress_bar.close()
+
+            if total_size != 0 and progress_bar.n != total_size:
+                print("⚠️ Downloaded file size mismatch!")
 
 
 def parse_meta_file():
