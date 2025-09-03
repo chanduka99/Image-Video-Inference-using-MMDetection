@@ -1,3 +1,4 @@
+from mmdet.apis import inference_detector
 from utils import get_model
 
 import mmcv
@@ -18,8 +19,26 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '-t','--treshold',default=0.5,type=float,
-    help='detection treshold for bounding box visualization'
+    '-t','--threshold',default=0.5,type=float,
+    help='detection threshold for bounding box visualization'
 )
 
 args = vars(parser.parse_args) # will take the input from the commandline and construct a dictionary out of it.
+
+
+# Build the model.
+model= get_model(args['weights'])
+
+img_path = args['input']
+image = mmcv.imread(img_path)
+
+# Carry out the infernce.
+result = inference_detector(model,image)
+
+# Show the reuslts.
+frame = model.show_result(image,result,score_thr=args['threshold'])
+mmcv.imshow(frame)
+
+# Initialize a file to save the result
+save_name = f"{args['input'].split('/')[-1].split('.')[0]}_{args['weights']}"
+mmcv.imwrite(frame,f"ouputs/{save_name}.jpg")
