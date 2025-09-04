@@ -1,4 +1,5 @@
 from mmdet.apis import inference_detector
+from mmdet.apis import show_result_pyplot
 from utils import get_model
 import time
 import mmcv
@@ -39,7 +40,8 @@ d_start_time = time.time()
 result = inference_detector(model,image)
 
 # Show the reuslts.
-frame = model.show_result(image,result,score_thr=args['threshold'])
+# frame = model.show_result(image,result,score_thr=args['threshold'])
+frame = show_result_pyplot(model, image, result, score_thr=args['threshold'])
 mmcv.imshow(frame)
 d_end_time = time.time()
 

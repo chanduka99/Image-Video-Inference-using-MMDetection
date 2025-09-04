@@ -52,15 +52,21 @@ It's better to always first **check the latest mmcv version >> find matching Pyt
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
 ```
 
+conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=12.1 -c pytorch -c nvidia
+
 ## Step 2: Install MMCV-Full 1.7.2 (matching PyTorch 1.11.0 + CUDA 11.3)
 ```bash
 pip install mmcv-full==1.7.2 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.11.0/index.html
 ```
+pip install -U openmim
+mim install mmcv==2.1.0
+mim install mmengine==0.10.7
 
 ## Step 3: Install MMDetection 2.28.2
 ```bash
 pip install mmdet==2.28.2
 ```
+mim install mmdet
 
 ## Step 4: Downgrade NumPy to 1.24.4 (required for PyTorch/MMCV compatibility)
 ```bash
