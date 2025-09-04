@@ -1,6 +1,6 @@
 from mmdet.apis import inference_detector
 from utils import get_model
-
+import time
 import mmcv
 import argparse
 
@@ -27,18 +27,24 @@ args = vars(parser.parse_args()) # will take the input from the commandline and 
 
 
 # Build the model.
+print("\nLoading model...\n")
 model= get_model(args['weights'])
 
 img_path = args['input']
 image = mmcv.imread(img_path)
 
 # Carry out the infernce.
+print("\nInferencing...\n")
+d_start_time = time.time()
 result = inference_detector(model,image)
 
 # Show the reuslts.
 frame = model.show_result(image,result,score_thr=args['threshold'])
 mmcv.imshow(frame)
+d_end_time = time.time()
 
+d_exec_time = d_end_time-d_start_time
+print(f"detection time: {d_exec_time} seconds")
 # Initialize a file to save the result
 save_name = f"{args['input'].split('/')[-1].split('.')[0]}_{args['weights']}"
 mmcv.imwrite(frame,f"ouputs/{save_name}.jpg")

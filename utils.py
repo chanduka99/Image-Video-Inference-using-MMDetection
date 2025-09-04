@@ -86,6 +86,40 @@ def parse_meta_file():
 
     return weights_list
 
+def format_checkpoint_file_name(folder_list, checkpoint_file_name):
+    """
+    Format checkpoint file names if the parent folder matches special folders.
+
+    Args:
+        folder_list (list): List of folder names requiring formatting.
+        checkpoint_file_name (str): Path to the checkpoint config file.
+
+    Returns:
+        str: Formatted checkpoint file name.
+    """
+    # Normalize path separators to handle both \ and /
+    parts = checkpoint_file_name.replace("\\", "/").split("/")
+
+    # Get the folder name before the file (e.g., 'dino' or 'double_heads')
+    folder_name = parts[-2]
+
+    if folder_name in folder_list:
+            filename = parts[-1]
+            
+            # Replace only the first 2 underscores with hyphens
+            underscore_count = 0
+            new_filename = ""
+            for ch in filename:
+                if ch == "_" and underscore_count < 2:
+                    new_filename += "-"
+                    underscore_count += 1
+                else:
+                    new_filename += ch    
+            parts[-1] = new_filename
+
+    # Rebuild with backslashes
+    return "\\".join(parts)
+
 
 def get_model(weights_name):
     """
@@ -120,10 +154,20 @@ def get_model(weights_name):
     config_file = os.path.join(
         'mmdetection/configs',
         download_url.split('/')[-3],
-        download_url.split('/')[-2],
+        download_url.split('/')[-2]+
         '.py')
     
-    model = init_detector(config_file,checkpoint_file)
+    special_file_name_containing_folders = ["dino", "double_heads"]
+
+    config_file = format_checkpoint_file_name(special_file_name_containing_folders,config_file)
+
+    model = init_detector(config=config_file,checkpoint=checkpoint_file,cfg_options=dict(
+        rcnn=dict(
+            score_thr=0.05,   # detection threshold
+            nms=dict(type='nms', iou_threshold=0.5),
+            max_per_img=100
+        )
+    ))
 
     return model
 
