@@ -51,18 +51,17 @@ d_end_time = time.time()
 
 
 # Initialize a file to save reuslts
-os.makedirs("ouputs",exist_ok=True)
+os.makedirs("outputs",exist_ok=True)
 save_name = f"{args['input'].split('/')[-1].split('.')[0]}_{args['weights']}"
-print(f"\ninference results :{result}\n")
 
 # visualize and save 
 visualizer = DetLocalVisualizer()
 visualizer.dataset_meta = model.dataset_meta
 
-
+converted_image = mmcv.imconvert(image,'bgr','rgb')
 visualizer.add_datasample(
     name="result",
-    image=image,
+    image=converted_image,
     data_sample=result,
     draw_gt=False,
     show=False,  
