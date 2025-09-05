@@ -66,12 +66,13 @@ mim install mmengine==0.10.7
 ```bash
 pip install mmdet==2.28.2
 ```
-mim install mmdet
+mim install mmdet==3.3.0
 
 ## Step 4: Downgrade NumPy to 1.24.4 (required for PyTorch/MMCV compatibility)
 ```bash
 pip install numpy==1.24.4
 ```
+pip install numpy==1.24.4
 
 ## Step 5: Install TensorBoard
 ```bash
@@ -82,8 +83,11 @@ pip install tensorboard
 ```bash
 pip install opencv-python==4.5.5.64
 ```
+pip install opencv-python==4.12.0.88
 
 ## Step 7: Pin protobuf to avoid runtime errors
 ```bash
 pip install protobuf==3.20.3
 ```
+below is a successful install
+![finding the correct pytorch version and cuda](/install_success.png "Matching pytorch version and cuda")

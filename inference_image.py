@@ -1,10 +1,11 @@
 from mmdet.apis import inference_detector
-from mmdet.apis import show_result_pyplot
+from mmdet.utils import register_all_modules
+from mmdet.visualization import DetLocalVisualizer
 from utils import get_model
 import time
 import mmcv
 import argparse
-
+import os
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser(description="tool for object recognition in images")
@@ -27,6 +28,9 @@ parser.add_argument(
 args = vars(parser.parse_args()) # will take the input from the commandline and construct a dictionary out of it.
 
 
+# required in MMDET 3.x
+register_all_modules()
+
 # Build the model.
 print("\nLoading model...\n")
 model= get_model(args['weights'])
@@ -38,15 +42,33 @@ image = mmcv.imread(img_path)
 print("\nInferencing...\n")
 d_start_time = time.time()
 result = inference_detector(model,image)
-
-# Show the reuslts.
-# frame = model.show_result(image,result,score_thr=args['threshold'])
-frame = show_result_pyplot(model, image, result, score_thr=args['threshold'])
-mmcv.imshow(frame)
 d_end_time = time.time()
+
+# # Show the reuslts.
+# # frame = model.show_result(image,result,score_thr=args['threshold'])
+# frame = show_result_pyplot(model, image, result, score_thr=args['threshold'])
+# mmcv.imshow(frame)
+
+
+# Initialize a file to save reuslts
+os.makedirs("ouputs",exist_ok=True)
+save_name = f"{args['input'].split('/')[-1].split('.')[0]}_{args['weights']}"
+print(f"\ninference results :{result}\n")
+
+# visualize and save 
+visualizer = DetLocalVisualizer()
+visualizer.dataset_meta = model.dataset_meta
+
+
+visualizer.add_datasample(
+    name="result",
+    image=image,
+    data_sample=result,
+    draw_gt=False,
+    show=False,  
+    wait_time=0,
+    out_file=f"outputs/{save_name}.jpg" 
+)
 
 d_exec_time = d_end_time-d_start_time
 print(f"detection time: {d_exec_time} seconds")
-# Initialize a file to save the result
-save_name = f"{args['input'].split('/')[-1].split('.')[0]}_{args['weights']}"
-mmcv.imwrite(frame,f"ouputs/{save_name}.jpg")
