@@ -77,3 +77,24 @@ python verify_mmcv_installation.py
 ```
 Screenshot of a successful install is below:
 ![finding the correct pytorch version and cuda](/install_success.png "Matching pytorch version and cuda")
+
+# How to run
+
+## Step 1: Create the weights.txt
+    python utils.py
+Above code snippet will create a weights.txt file.
+
+## Step 2: Inferencing
+    python inference_image.py --input input/dog_bike_car.jpg --weights faster_rcnn_r50_fpn_1x_coco
+
+ -  The image inferenced here is the dog_bike_car.jpg which is inside the input directory. You can give your own image file path here.
+
+ -  The weights file used here is faster_rcnn_r50_fpn_1x_coco. You can choose what weight file you want to give after seeing the available weights from the weights.txt. Give the weight name as the argument.( Weights will be automatically downloaded and added to the **checkpoint** directory ).
+
+    Example: 
+    
+    https://download.openmmlab.com/mmdetection/v2.0/double_heads/dh_faster_rcnn_r50_fpn_1x_coco/dh_faster_rcnn_r50_fpn_1x_coco_20200130-586b67df.pth
+
+    weight name = faster_rcnn_r50_fpn_1x_coco
+
+- Output images will be saved to the **outputs** directory.
