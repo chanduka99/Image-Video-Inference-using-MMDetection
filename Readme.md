@@ -92,9 +92,11 @@ Above code snippet will create a weights.txt file.
  -  The weights file used here is faster_rcnn_r50_fpn_1x_coco. You can choose what weight file you want to give after seeing the available weights from the weights.txt. Give the weight name as the argument.( Weights will be automatically downloaded and added to the **checkpoint** directory ).
 
     Example: 
-    
+
+    Below url is from the weights.txt file.
+
     https://download.openmmlab.com/mmdetection/v2.0/double_heads/dh_faster_rcnn_r50_fpn_1x_coco/dh_faster_rcnn_r50_fpn_1x_coco_20200130-586b67df.pth
 
-    weight name = faster_rcnn_r50_fpn_1x_coco
+    from the above url we can separate the weights name as: **faster_rcnn_r50_fpn_1x_coco**
 
 - Output images will be saved to the **outputs** directory.
