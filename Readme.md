@@ -60,7 +60,7 @@ pip install opencv-python==4.12.0.88
 ```
 
 
-## Step 7: Pin protobuf to avoid runtime errors
+## Step 7: Protobuf to avoid runtime errors
 ```bash
 pip install protobuf==3.20.3
 ```
