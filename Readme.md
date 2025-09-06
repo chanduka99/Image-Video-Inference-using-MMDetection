@@ -13,7 +13,7 @@ Whether you're a researcher, developer, or hobbyist, this project helps you quic
 
 
 # Installation Guide for MMDetection Setup
-#### Note: I have included exact version of almost all the packages installed. They are necessary to maintain comapatability. In case if you are installing newer versions make sure they are compatible with each other.
+#### Note: I have included exact version of almost all the packages installed. They are necessary to maintain comapatability. In case if you are installing newer versions make sure they are compatible with each other. If you want to know how to select the latest versions and more check out my medium articel  https://medium.com/@chanduka404/mmdetection-3x-setup-on-windows-with-cuda-support-097666a48c73
 ## Step 1: Create virtual environment
 ```bash
 conda create --prefix ./mmcv
